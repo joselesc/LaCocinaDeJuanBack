@@ -14,6 +14,23 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
+-- Volcando estructura de base de datos para lacocinadejuan
+CREATE DATABASE IF NOT EXISTS `lacocinadejuan` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `lacocinadejuan`;
+
+-- Volcando estructura para tabla lacocinadejuan.bebidas
+CREATE TABLE IF NOT EXISTS `bebidas` (
+  `id_bebida` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL,
+  `imagen` varchar(255) DEFAULT NULL,
+  `descripcion` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `precio` decimal(10,2) DEFAULT NULL,
+  `disponible` tinyint(1) DEFAULT NULL,
+  `cantidad` int DEFAULT NULL,
+  PRIMARY KEY (`id_bebida`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 -- Volcando datos para la tabla lacocinadejuan.bebidas: ~6 rows (aproximadamente)
 INSERT INTO `bebidas` (`id_bebida`, `nombre`, `imagen`, `descripcion`, `precio`, `disponible`, `cantidad`) VALUES
 	(1, 'Coca-Cola', 'https://speedyburger.lecker123.de/media/image/1e/49/56/AdobeStock_284656005_Editorial_Use_Only_comp_600x600.jpg', 'Bebida gaseosa', 1000.00, 1, 50),
@@ -23,9 +40,34 @@ INSERT INTO `bebidas` (`id_bebida`, `nombre`, `imagen`, `descripcion`, `precio`,
 	(5, 'Cerveza', 'https://dam.ngenespanol.com/wp-content/uploads/2019/08/tipos-de-cerveza-2.jpg', 'Cerveza artesanal', 3000.00, 1, 60),
 	(6, 'Agua Mineral', 'https://parkingnearairports.io/img/3/68e694d17f-shutterstock249896590.jpg', 'Agua mineral sin gas', 1000.00, 1, 70);
 
+-- Volcando estructura para tabla lacocinadejuan.clientes
+CREATE TABLE IF NOT EXISTS `clientes` (
+  `id_cliente` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL,
+  `apellido` varchar(50) NOT NULL,
+  `domicilio` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `telefono` varchar(20) DEFAULT NULL,
+  `mail` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `contraseña` varchar(100) NOT NULL,
+  PRIMARY KEY (`id_cliente`) USING BTREE,
+  UNIQUE KEY `mail` (`mail`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 -- Volcando datos para la tabla lacocinadejuan.clientes: ~1 rows (aproximadamente)
 INSERT INTO `clientes` (`id_cliente`, `nombre`, `apellido`, `domicilio`, `telefono`, `mail`, `contraseña`) VALUES
 	(1, 'mail@mail.com', 'jorge', 'lopez', '802255', '225547788', 'hola');
+
+-- Volcando estructura para tabla lacocinadejuan.comidas
+CREATE TABLE IF NOT EXISTS `comidas` (
+  `id_comida` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL,
+  `imagen` varchar(255) DEFAULT NULL,
+  `descripcion` text,
+  `precio` decimal(10,2) DEFAULT NULL,
+  `disponible` tinyint(1) DEFAULT NULL,
+  `cantidad` int DEFAULT NULL,
+  PRIMARY KEY (`id_comida`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Volcando datos para la tabla lacocinadejuan.comidas: ~6 rows (aproximadamente)
 INSERT INTO `comidas` (`id_comida`, `nombre`, `imagen`, `descripcion`, `precio`, `disponible`, `cantidad`) VALUES
@@ -35,6 +77,24 @@ INSERT INTO `comidas` (`id_comida`, `nombre`, `imagen`, `descripcion`, `precio`,
 	(4, 'Sushi', 'https://m2.live-resto.fr/files/establishments/cotesushirestaurantjaponaispruvienmarseillejoliettepradosaintbarnabelivraisonreservationemportersushimakicaliforniachirashi130021300813012_1510673214.jpg', 'Variedad de sushi', 9000.00, 1, 25),
 	(5, 'Tacos', 'https://www.cuisinart.com/globalassets/catalog/appliances/food-processors/complete-chef-cooking-food-processor/tacosamericanos_ss1262600101.jpg', 'Tortillas de maíz rellenas de carne y vegetales', 4000.00, 1, 30),
 	(6, 'Pasta Carbonara', 'https://www.supermomix.com/wp-content/uploads/2018/03/diary-free-carbonara.jpg', 'Pasta con salsa carbonara', 4500.00, 1, 18);
+
+-- Volcando estructura para tabla lacocinadejuan.pedidos
+CREATE TABLE IF NOT EXISTS `pedidos` (
+  `id_pedido` int NOT NULL AUTO_INCREMENT,
+  `id_cliente` int NOT NULL,
+  `id_comida` int NOT NULL,
+  `id_bebida` int NOT NULL,
+  `envio` int DEFAULT NULL,
+  `total` double NOT NULL DEFAULT (0),
+  `fecha` timestamp(6) NOT NULL,
+  PRIMARY KEY (`id_pedido`),
+  KEY `id_comida` (`id_comida`),
+  KEY `id_bebida` (`id_bebida`),
+  KEY `Pedido_ibfk_1` (`id_cliente`) USING BTREE,
+  CONSTRAINT `Pedido_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`),
+  CONSTRAINT `Pedido_ibfk_2` FOREIGN KEY (`id_comida`) REFERENCES `comidas` (`id_comida`),
+  CONSTRAINT `Pedido_ibfk_3` FOREIGN KEY (`id_bebida`) REFERENCES `bebidas` (`id_bebida`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Volcando datos para la tabla lacocinadejuan.pedidos: ~0 rows (aproximadamente)
 
